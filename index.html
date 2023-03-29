@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/css/style.css" />
+    <script type="module" src="index.js"></script>
+    <title>Social Media App</title>
+  </head>
+  <body>
+    <form>
+      <div id="loggedInAs"></div>
+      <div id="createUserDiv">
+        <input
+          type="text"
+          id="inputUsername"
+          name="inputUsername"
+          placeholder="Enter username..."
+        />
+        <input
+          type="password"
+          id="inputPassword"
+          name="inputPassword"
+          placeholder="Enter password..."
+        />
+        <button id="loginBtn">Log in</button>
+        <button id="createUserBtn">Create User</button>
+
+        <label for="avatarIMGS">Select avatar image</label>
+        <select name="avatarIMGS" id="avatarIMGS">
+          <option
+            id="penguinIMG"
+            value="https://w7.pngwing.com/pngs/359/541/png-transparent-penguin-books-paperback-publishing-random-house-book-company-king-logo.png"
+          >
+            Penguin
+          </option>
+          <option
+            id="octopusIMG"
+            value="https://w7.pngwing.com/pngs/45/798/png-transparent-octopus-computer-icons-random-icons-miscellaneous-text-logo.png"
+          >
+            Octopus
+          </option>
+          <option
+            id="batIMG"
+            value="https://icon2.cleanpng.com/20180611/uow/kisspng-silhouette-bat-clip-art-vampirina-5b1e11b73e3192.0690200115286972712548.jpg"
+          >
+            Bat
+          </option>
+        </select>
+      </div>
+      <br />
+      <div id="postMessageContainer">
+        <input type="text" id="inputForMessages" placeholder="Enter Message" />
+        <button id="postMessageBtn">Post Message</button>
+      </div>
+    </form>
+    <div id="messagesForUser"></div>
+    <div id="displayUsernames"></div>
+    <div id="statusUpdatesContainer"></div>
+  </body>
+</html>

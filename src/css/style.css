@@ -1,0 +1,12 @@
+#postMessageContainer {
+  display: none;
+}
+
+#loggedInAs img {
+  width: 100px;
+}
+
+#displayUsernames {
+  border: solid 2px black;
+  width: 50px;
+}

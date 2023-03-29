@@ -1,0 +1,207 @@
+const createUserBtn = document.getElementById("createUserBtn") as HTMLButtonElement;
+
+const inputUsername = document.getElementById(
+  "inputUsername"
+) as HTMLInputElement;
+
+const inputPassword = document.getElementById(
+  "inputPassword"
+) as HTMLInputElement;
+
+const displayUsernames = document.getElementById('displayUsernames') as HTMLElement;
+
+const inputForMessages = document.getElementById('inputForMessages') as HTMLInputElement;
+
+const postMessageBtn = document.getElementById('postMessageBtn') as HTMLButtonElement;
+postMessageBtn.disabled = true;
+
+const messagesForUser = document.getElementById('messagesForUser') as HTMLElement;
+
+const loginBtn = document.getElementById('loginBtn') as HTMLButtonElement;
+
+const postedMessagesContainer = document.getElementById('postedMessagesContainer') as HTMLElement
+
+const avatarIMGS = document.getElementById('avatarIMGS') as HTMLSelectElement
+
+const createUserDiv = document.getElementById('createUserDiv') as HTMLElement
+
+const postMessageContainer = document.getElementById('postMessageContainer') as HTMLElement
+
+const loggedInAs = document.getElementById('loggedInAs') as HTMLElement;
+
+
+let currentStatusData: string[];
+
+let userInfo: object = {
+  username: inputUsername.value,
+  password: inputPassword.value,
+  statusUpdates: [inputForMessages.value],
+}
+
+//CREATE USERS
+async function createNewUser() {
+  const url = `https://socialapp-8a221-default-rtdb.europe-west1.firebasedatabase.app/${inputUsername.value}.json`;
+
+  const init = {
+    method: "PUT",
+    body: JSON.stringify(
+      (userInfo = {
+        username: inputUsername.value,
+        password: inputPassword.value,
+        statusUpdates: inputForMessages.value,
+        imageURL: avatarIMGS.value,
+      })
+    ),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  };
+
+  const users = await getUsers()
+
+  if (inputUsername.value in users) {
+    console.log("User already exists")
+    return;
+  }
+
+  if (inputUsername.value === "" || inputPassword.value === "") {
+    return messagesForUser.innerText = `Must write something in both fields.`
+  }
+
+  const response = await fetch(url, init);
+  const data = await response.json();
+
+  messagesForUser.innerText = `New user created. You may login.`
+  displayUsers()
+}
+
+postMessageBtn.addEventListener('click', (e) => {
+  e.preventDefault()
+})
+
+//GET USERS
+async function getUsers() {
+  const url = `https://socialapp-8a221-default-rtdb.europe-west1.firebasedatabase.app/.json`;
+  const response = await fetch(url);
+  const userData = await response.json();
+  return userData;
+}
+
+//POST MESSAGES
+async function postMessages() {
+
+
+  const inputForMessages = document.getElementById('inputForMessages') as HTMLInputElement;
+  const inputUsername = document.getElementById(
+    "inputUsername"
+  ) as HTMLInputElement;
+  const inputPassword = document.getElementById(
+    "inputPassword"
+  ) as HTMLInputElement;
+
+  const url = `https://socialapp-8a221-default-rtdb.europe-west1.firebasedatabase.app/${inputUsername.value}.json`;
+
+  currentStatusData.push(inputForMessages.value)
+
+  const init = {
+    method: "PUT",
+    body: JSON.stringify(
+      (userInfo = {
+        username: inputUsername.value,
+        password: inputPassword.value,
+        statusUpdates: currentStatusData,
+      })
+    ),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  };
+  const response = await fetch(url, init);
+  const userData = await response.json();
+
+  let postParagraph = document.createElement('p');
+  postParagraph.innerText = `${inputUsername.value}${inputForMessages.value}`
+  postedMessagesContainer?.append(postParagraph)
+  displayAllStatusUpdates()
+}
+
+//LOG IN
+async function logIn() {
+  const url = `https://socialapp-8a221-default-rtdb.europe-west1.firebasedatabase.app/.json`;
+  const response = await fetch(url);
+  const userData = await response.json();
+
+  if (inputUsername.value in userData && inputPassword.value === userData[inputUsername.value].password) {
+    postMessageBtn.disabled = false;
+    messagesForUser.innerText = `You've successfully logged in!`
+    createUserDiv.style.display = "none";
+    loggedInAs.innerHTML = `You are logged in as: ${inputUsername.value} <img src="${avatarIMGS.value}"/>`
+    postMessageContainer.style.display = "block";
+  } else {
+    messagesForUser.innerText = `Wrong username, wrong password or account does not exist.`
+  }
+  getStatusUpdate()
+
+}
+
+
+//GET STATUSUPDATES
+async function getStatusUpdate() {
+  const url = `https://socialapp-8a221-default-rtdb.europe-west1.firebasedatabase.app/${inputUsername.value}/statusUpdates.json`;
+
+  const response = await fetch(url)
+  const statusData = await response.json()
+  console.log(statusData)
+
+  if (statusData === "") {
+    currentStatusData = []
+  } else if (typeof statusData === "string") {
+    currentStatusData = [statusData]
+  } else {
+    currentStatusData = statusData;
+  }
+}
+
+
+//DISPLAY USERS
+async function displayUsers() {
+  const userData = await getUsers()
+
+  displayUsernames.innerHTML = "";
+
+  const getusernamesFromObj = Object.entries(userData);
+  getusernamesFromObj.forEach(username => {
+
+    const ele = document.createElement('div');
+    ele.innerText = `${username[0]}`
+    ele.addEventListener('click', () => {
+      console.log(username[0] + " " + "clicked")
+    })
+    displayUsernames.appendChild(ele)
+  });
+}
+displayUsers()
+
+
+//DISPLAY ALL MSG
+async function displayAllStatusUpdates() {
+  const userData = await getUsers();
+
+  const statusUpdatesContainer = document.getElementById('statusUpdatesContainer')
+
+  for (const username in userData) {
+    const statusUpdate = userData[username].statusUpdates;
+    const statusUpdateElement = document.createElement('p');
+    statusUpdateElement.innerText = `${username}: ${statusUpdate}`
+    statusUpdatesContainer?.appendChild(statusUpdateElement)
+  }
+}
+displayAllStatusUpdates()
+
+
+export { createNewUser, createUserBtn, getUsers, postMessages, postMessageBtn, loginBtn, logIn };
+
+
+
+
+
