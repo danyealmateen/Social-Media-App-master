@@ -199,6 +199,11 @@ async function displayAllStatusUpdates() {
   }
 }
 
+//USERINFO!
+async function selectedUserInfo() {
+
+}
+
 
 
 export { createNewUser, createUserBtn, getUsers, postMessages, postMessageBtn, loginBtn, logIn };

@@ -141,4 +141,7 @@ async function displayAllStatusUpdates() {
         statusUpdatesContainer?.appendChild(statusUpdateElement);
     }
 }
+//USERINFO!
+async function selectedUserInfo() {
+}
 export { createNewUser, createUserBtn, getUsers, postMessages, postMessageBtn, loginBtn, logIn };
