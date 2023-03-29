@@ -29,6 +29,8 @@ const postMessageContainer = document.getElementById('postMessageContainer') as 
 
 const loggedInAs = document.getElementById('loggedInAs') as HTMLElement;
 
+let statusUpdatesContainer = document.getElementById('statusUpdatesContainer') as HTMLElement;
+
 
 let currentStatusData: string[];
 
@@ -72,7 +74,6 @@ async function createNewUser() {
   const data = await response.json();
 
   messagesForUser.innerText = `New user created. You may login.`
-  displayUsers()
 }
 
 postMessageBtn.addEventListener('click', (e) => {
@@ -89,7 +90,6 @@ async function getUsers() {
 
 //POST MESSAGES
 async function postMessages() {
-
 
   const inputForMessages = document.getElementById('inputForMessages') as HTMLInputElement;
   const inputUsername = document.getElementById(
@@ -122,6 +122,7 @@ async function postMessages() {
   let postParagraph = document.createElement('p');
   postParagraph.innerText = `${inputUsername.value}${inputForMessages.value}`
   postedMessagesContainer?.append(postParagraph)
+
   displayAllStatusUpdates()
 }
 
@@ -137,10 +138,13 @@ async function logIn() {
     createUserDiv.style.display = "none";
     loggedInAs.innerHTML = `You are logged in as: ${inputUsername.value} <img src="${avatarIMGS.value}"/>`
     postMessageContainer.style.display = "block";
+    getStatusUpdate();
+    displayUsers()
+    displayAllStatusUpdates()
   } else {
     messagesForUser.innerText = `Wrong username, wrong password or account does not exist.`
   }
-  getStatusUpdate()
+  // getStatusUpdate()
 
 }
 
@@ -167,8 +171,6 @@ async function getStatusUpdate() {
 async function displayUsers() {
   const userData = await getUsers()
 
-  displayUsernames.innerHTML = "";
-
   const getusernamesFromObj = Object.entries(userData);
   getusernamesFromObj.forEach(username => {
 
@@ -180,14 +182,14 @@ async function displayUsers() {
     displayUsernames.appendChild(ele)
   });
 }
-displayUsers()
+
 
 
 //DISPLAY ALL MSG
 async function displayAllStatusUpdates() {
   const userData = await getUsers();
 
-  const statusUpdatesContainer = document.getElementById('statusUpdatesContainer')
+  statusUpdatesContainer.innerHTML = "";
 
   for (const username in userData) {
     const statusUpdate = userData[username].statusUpdates;
@@ -196,7 +198,7 @@ async function displayAllStatusUpdates() {
     statusUpdatesContainer?.appendChild(statusUpdateElement)
   }
 }
-displayAllStatusUpdates()
+
 
 
 export { createNewUser, createUserBtn, getUsers, postMessages, postMessageBtn, loginBtn, logIn };
